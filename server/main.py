@@ -2,10 +2,13 @@
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from app.core.database import database
+from app.api import routers
 from app.exceptions.exception_handlers import validation_exception_handler
 
 app = FastAPI()
 
+for router in routers:
+    app.include_router(router)
 
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
