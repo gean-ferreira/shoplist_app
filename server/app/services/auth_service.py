@@ -14,7 +14,7 @@ class AuthService:
 
     async def _authenticate_user(self, username: str, password: str):
         db_user = await self.user_repository.get_user_by_username(username)
-        if db_user is None or not verify_password(password, db_user.password_hash):
+        if db_user is None or not verify_password(password, db_user.password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Usuário e/ou senha inválidos",
