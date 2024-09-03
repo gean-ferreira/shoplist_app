@@ -26,3 +26,36 @@ def create_access_token(user_id: str, expires_delta: timedelta = None):
     return encoded_jwt, expire
 
 
+def decode_access_token(access_token: str):
+    if not access_token:
+        raise HTTPException(
+            status_code=401,
+            detail="Token não fornecido",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    try:
+        payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+        if "sub" not in payload or payload["sub"] is None:
+            raise HTTPException(
+                status_code=401,
+                detail="Token inválido: identificador de usuário ausente",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return payload
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expirado",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except JWTError as e:
+        error_message = str(e)
+        detail = (
+            "Token inválido"
+            if "Signature verification failed" in error_message
+            else "Não foi possível validar as credenciais"
+        )
+        raise HTTPException(
+            status_code=401, detail=detail, headers={"WWW-Authenticate": "Bearer"}
+        )
