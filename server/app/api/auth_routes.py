@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Response
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
-from app.models.auth_models import LoginFormData
+from app.models.auth_models import LoginData
 from app.models.error_models import DetailErrorResponse, ErrorResponseModel
 from app.models.response_models import ResponseWithDataModel
 
@@ -33,7 +33,7 @@ auth_service = AuthService(UserRepository())
     """,
     tags=["Auth"],
 )
-async def login(response: Response, form_data: LoginFormData = Depends()):
+async def login(response: Response, form_data: LoginData):
     access_token, expire = await auth_service.authenticate_and_generate_token(
         form_data.username, form_data.password
     )
