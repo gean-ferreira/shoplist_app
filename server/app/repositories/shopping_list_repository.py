@@ -8,7 +8,7 @@ from app.core.database import database
 class ShoppingListRepository:
 
     async def get_shopping_lists(self, user_id: int):
-        query = "SELECT list_id, list_name, created_at FROM shoplist_db.ShoppingList WHERE user_id = :user_id;"
+        query = "SELECT * FROM shoplist_db.ShoppingList WHERE user_id = :user_id;"
         return await database.fetch_all(query, {"user_id": user_id})
 
     async def get_shopping_list_by_id(self, list_id: int):
