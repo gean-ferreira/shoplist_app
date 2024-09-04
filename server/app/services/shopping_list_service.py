@@ -1,9 +1,8 @@
 """ 
-Este módulo contém a lógica de serviço para operações relacionadas aos usuários
+Este módulo contém a lógica de serviço para operações relacionadas as listas de compras
 """
 
 from fastapi import HTTPException, status
-from app.models.shopping_list_models import ShoppingListBaseModel
 from app.repositories.shopping_list_repository import ShoppingListRepository
 from app.security.dependencies import verify_user_permission
 
@@ -27,14 +26,12 @@ class ShoppingListService:
         shopping_lists_records = await self.shopping_list_repository.get_shopping_lists(
             user_id
         )
-
         return shopping_lists_records
 
     async def create_shopping_list(self, user_id: int, list_name: str):
         db_shopping_list = await self.shopping_list_repository.create_shopping_list(
             user_id, list_name
         )
-        print(db_shopping_list)
         return db_shopping_list
 
     async def update_shopping_list(self, list_id: int, list_name: str, user_id: int):
