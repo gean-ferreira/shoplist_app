@@ -100,6 +100,10 @@ async def create_shopping_list(
             "model": BaseResponseModel,
             "description": "Lista de compras atualizada com sucesso.",
         },
+        401: {
+            "model": DetailErrorResponse,
+            "description": "O error é retornado caso a requisição falhou porque o token de acesso é inválido, expirou ou não foi fornecido.",
+        },
         403: {
             "model": DetailErrorResponse,
             "description": "Caso o usuário não tem permissão para modificar esses dados.",
@@ -139,6 +143,10 @@ async def update_shopping_list(
             "model": BaseResponseModel,
             "description": "Confirmação de que a lista de compras foi excluída com sucesso.",
         },
+        401: {
+            "model": DetailErrorResponse,
+            "description": "O error é retornado caso a requisição falhou porque o token de acesso é inválido, expirou ou não foi fornecido.",
+        },
         403: {
             "model": DetailErrorResponse,
             "description": "Caso o usuário não tem permissão para modificar esses dados.",
@@ -154,7 +162,7 @@ async def update_shopping_list(
     },
     summary="Exclui Lista de Compras do Usuário Autenticado",
     description="""
-    Exclui uma lista de comprass específica da plataforma, identificado pelo seu ID único.
+    Exclui uma lista de compras específica da plataforma, identificado pelo seu ID único.
 
     Essa operação é irreversível.
     Uma vez que a lista de compras é excluída, todos os dados associados a essa lista serão permanentemente removidos.
