@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-px-sm">
     <h1 class="text-h4 text-center">Login</h1>
-    <q-form @submit="onSubmit" @reset="onReset">
+    <q-form @submit="onSubmit">
       <q-input
         v-model="username"
         label="Username"
@@ -18,10 +18,7 @@
         filled
         class="q-mb-md"
       />
-      <q-card-actions align="right">
-        <q-btn label="Login" type="submit" color="primary" />
-        <q-btn label="Reset" type="reset" color="secondary" flat />
-      </q-card-actions>
+      <q-btn label="Login" type="submit" color="primary" />
     </q-form>
   </q-page>
 </template>
@@ -32,19 +29,14 @@ defineOptions({
 });
 
 import { ref } from 'vue';
+import { login } from '../services/auth.service';
 
 const username = ref('');
 const password = ref('');
 
-const onSubmit = () => {
-  if (username.value && password.value) {
-    // Aqui você faria a lógica de autenticação
-    console.log('Login:', username.value, password.value);
-  }
-};
-
-const onReset = () => {
-  username.value = '';
-  password.value = '';
+const onSubmit = async () => {
+  await login({ username: username.value, password: password.value }).catch(
+    () => console.error('Ocorreu um erro no formulário de login')
+  );
 };
 </script>
