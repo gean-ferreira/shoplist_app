@@ -28,7 +28,6 @@ api.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-const api = axios.create({ baseURL: 'https://api.example.com' });
     if (error.response) {
       const errorData = error.response.data as ErrorResponse;
       const message = errorData.detail || 'Ocorreu um erro';
