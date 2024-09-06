@@ -18,7 +18,13 @@
         filled
         class="q-mb-md"
       />
-      <q-btn label="Login" type="submit" color="primary" />
+      <q-btn
+        label="Login"
+        type="submit"
+        color="primary"
+        :loading="isLoading"
+        :disable="isLoading"
+      />
     </q-form>
   </q-page>
 </template>
@@ -30,13 +36,19 @@ defineOptions({
 
 import { ref } from 'vue';
 import { login } from '../services/auth.service';
+import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
+const isLoading = ref(false);
+const router = useRouter()
 
 const onSubmit = async () => {
-  await login({ username: username.value, password: password.value }).catch(
-    () => console.error('Ocorreu um erro no formulário de login')
-  );
+  isLoading.value = true;
+
+  await login({ username: username.value, password: password.value })
+    .then(() => router.push('/'))
+    .catch(() => console.error('Ocorreu um erro no formulário de login'))
+    .finally(() => (isLoading.value = false));
 };
 </script>
