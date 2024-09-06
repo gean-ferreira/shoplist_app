@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosError, AxiosInstance } from 'axios';
+import { Notify } from 'quasar';
 
 declare module 'vue' {
   interface ComponentCustomProperties {
@@ -7,6 +8,7 @@ declare module 'vue' {
     $api: AxiosInstance;
   }
 }
+
 // Define a estrutura esperada da resposta de erro
 interface ErrorResponse {
   detail: string;
@@ -27,6 +29,25 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
 const api = axios.create({ baseURL: 'https://api.example.com' });
+    if (error.response) {
+      const errorData = error.response.data as ErrorResponse;
+      const message = errorData.detail || 'Ocorreu um erro';
+
+      Notify.create({
+        type: 'negative',
+        message: message,
+        timeout: 3000,
+        position: 'top-right',
+      });
+    } else {
+      // Erro genérico quando não há resposta
+      Notify.create({
+        type: 'negative',
+        message: 'Ocorreu um erro inesperado aconteceu',
+        timeout: 3000,
+        position: 'top-right',
+      });
+    }
     return Promise.reject(error.response);
   }
 );
