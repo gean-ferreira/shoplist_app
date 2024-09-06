@@ -1,11 +1,15 @@
 import { boot } from 'quasar/wrappers';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 
 declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
     $api: AxiosInstance;
   }
+}
+// Define a estrutura esperada da resposta de erro
+interface ErrorResponse {
+  detail: string;
 }
 
 // Be careful when using SSR for cross-request state pollution
@@ -14,7 +18,18 @@ declare module 'vue' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
+const api = axios.create({ baseURL: process.env.VITE_API_URL });
+
+// Interceptor para respostas
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: AxiosError) => {
 const api = axios.create({ baseURL: 'https://api.example.com' });
+    return Promise.reject(error.response);
+  }
+);
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
