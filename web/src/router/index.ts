@@ -7,6 +7,8 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import { useUserStore } from 'src/stores/user.store';
+import { read_user_data } from 'src/services/auth.service';
 
 /*
  * If not building with SSR mode, you can
@@ -32,6 +34,19 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  Router.beforeEach(async (to, from, next) => {
+    const userStore = useUserStore();
+
+    // Verifica se o caminho é protegidoe e se o username está vazio
+    if (to.meta.requiresAuth && !userStore.username) {
+      await read_user_data().catch(() =>
+        console.error('Erro ao buscar dados do usuário')
+      );
+    }
+
+    next();
   });
 
   return Router;
