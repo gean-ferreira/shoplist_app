@@ -3,6 +3,7 @@ Este módulo define os modelos de dados utilizados para representar usuários no
 """
 
 from pydantic import BaseModel
+from app.models.response_models import ResponseWithDataModel
 
 
 class UserBaseModel(BaseModel):
@@ -11,3 +12,7 @@ class UserBaseModel(BaseModel):
 
 class UserInModel(UserBaseModel):
     password: str
+
+
+class UserOutDataModel(ResponseWithDataModel[UserBaseModel]):
+    pass

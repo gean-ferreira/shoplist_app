@@ -12,6 +12,10 @@ class UserRepository:
         query = "SELECT * FROM shoplist_db.User WHERE username = :username"
         return await database.fetch_one(query, {"username": username})
 
+    async def get_user_by_id(self, user_id: int):
+        query = "SELECT * FROM shoplist_db.User WHERE user_id = :user_id;"
+        return await database.fetch_one(query, {"user_id": user_id})
+
     async def create_user(self, user: UserInModel):
         query = "INSERT INTO shoplist_db.User (username, password) VALUES (:username, :password);"
         return await database.execute(
