@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from fastapi import APIRouter, Depends, Response
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
@@ -8,6 +9,8 @@ from app.models.response_models import ResponseWithDataModel
 
 router = APIRouter()
 auth_service = AuthService(UserRepository())
+COOKIE_SECURE = os.getenv("COOKIE_SECURE")
+COOKIE_SAME_SITE = os.getenv("COOKIE_SAME_SITE")
 
 
 @router.post(
@@ -43,8 +46,8 @@ async def login(response: Response, form_data: LoginData):
         value=access_token,
         httponly=True,
         max_age=max_age,
-        secure=True,
-        samesite="Strict",
+        secure=COOKIE_SECURE,
+        samesite=COOKIE_SAME_SITE,
     )
     return ResponseWithDataModel(
         message="Login efetuado com sucesso",
