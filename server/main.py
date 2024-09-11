@@ -9,7 +9,7 @@ from app.exceptions.exception_handlers import validation_exception_handler
 app = FastAPI()
 
 for router in routers:
-    app.include_router(router)
+    app.include_router(router, prefix="/api")
 
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_middleware(
