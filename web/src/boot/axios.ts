@@ -9,11 +9,6 @@ declare module 'vue' {
   }
 }
 
-// Define a estrutura esperada da resposta de erro
-interface ErrorResponse {
-  detail: string;
-}
-
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -22,37 +17,36 @@ interface ErrorResponse {
 // for each client)
 const api = axios.create({ baseURL: process.env.VITE_API_URL });
 
-// Interceptor para respostas
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error: AxiosError) => {
-    if (error.response) {
-      const errorData = error.response.data as ErrorResponse;
-      const message = errorData.detail || 'Ocorreu um erro';
-
-      Notify.create({
-        type: 'negative',
-        message: message,
-        timeout: 3000,
-        position: 'top-right',
-      });
-    } else {
-      // Erro genérico quando não há resposta
-      Notify.create({
-        type: 'negative',
-        message: 'Ocorreu um erro inesperado aconteceu',
-        timeout: 3000,
-        position: 'top-right',
-      });
-    }
-    return Promise.reject(error.response);
-  }
-);
-
-export default boot(({ app }) => {
+export default boot(({ app, router }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
+
+  // Interceptor para respostas
+  api.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error: AxiosError) => {
+      if (error.response && error.response.status === 401) {
+        router.push('/login');
+        Notify.create({
+          type: 'negative',
+          message: 'Sua sessão expirou, faça login novamente',
+          timeout: 3000,
+          position: 'top-right',
+        });
+      } else if (error.response && error.response.status === 500) {
+        Notify.create({
+          type: 'negative',
+          message:
+            'Erro interno do servidor. Por favor, tente novamente mais tarde',
+          timeout: 3000,
+          position: 'top-right',
+        });
+      }
+
+      return Promise.reject(error.response);
+    }
+  );
 
   app.config.globalProperties.$axios = axios;
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
