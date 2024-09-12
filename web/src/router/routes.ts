@@ -15,6 +15,14 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'produtos',
         component: () => import('pages/ProductPage.vue'),
+      {
+        path: 'listas-de-compras',
+        name: 'Listas de compras',
+        component: () => import('src/pages/ShoppingListPage.vue'),
+        meta: {
+          icon: 'shopping_cart',
+          requiresAuth: true,
+        },
       },
     ],
   },
