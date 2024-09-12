@@ -104,7 +104,7 @@ async def update_product(product_id: int, product: ProductBaseModel):
 
 
 @router.delete(
-    "/products/{user_id}/",
+    "/products/{product_id}/",
     responses={
         200: {
             "model": BaseResponseModel,
