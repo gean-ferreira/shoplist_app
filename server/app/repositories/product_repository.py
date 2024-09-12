@@ -34,5 +34,9 @@ class ProductRepository:
         )
 
     async def delete_product(self, product_id: int):
+        """
+        Deleta um produto da tabela Product. Os registros relacionados em ProductInList
+        serão automaticamente deletados devido à FK com ON DELETE CASCADE.
+        """
         query = "DELETE FROM shoplist_db.Product WHERE product_id = :product_id;"
         return await database.execute(query, {"product_id": product_id})
