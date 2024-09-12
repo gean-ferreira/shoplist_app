@@ -26,22 +26,38 @@ export default boot(({ app, router }) => {
       return response;
     },
     (error: AxiosError) => {
-      if (error.response && error.response.status === 401) {
-        router.push('/login');
+      if (!error.response) return Promise.reject(error);
+
+      const { status, data } = error.response;
+      type ErrorDetail = { detail: string };
+      const { detail } = data as ErrorDetail;
+
+      const notifyError = (message: string) => {
         Notify.create({
           type: 'negative',
-          message: 'Sua sessão expirou, faça login novamente',
+          message: message,
           timeout: 3000,
           position: 'top-right',
         });
-      } else if (error.response && error.response.status === 500) {
-        Notify.create({
-          type: 'negative',
-          message:
-            'Erro interno do servidor. Por favor, tente novamente mais tarde',
-          timeout: 3000,
-          position: 'top-right',
-        });
+      };
+
+      switch (status) {
+        case 401:
+          router.push('/login');
+          notifyError(detail);
+          break;
+        case 400:
+        case 404:
+        case 422:
+          notifyError(detail);
+          break;
+        case 500:
+          notifyError(
+            'Erro interno do servidor. Por favor, tente novamente mais tarde'
+          );
+          break;
+        default:
+          notifyError('Ocorreu um erro inesperado.');
       }
 
       return Promise.reject(error.response);
