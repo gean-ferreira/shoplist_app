@@ -12,6 +12,10 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
         },
       },
+      {
+        path: 'produtos',
+        component: () => import('pages/ProductPage.vue'),
+      },
     ],
   },
   {
