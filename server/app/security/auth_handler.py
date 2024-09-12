@@ -30,7 +30,7 @@ def decode_access_token(access_token: str):
     if not access_token:
         raise HTTPException(
             status_code=401,
-            detail="Token não fornecido",
+            detail="Sua sessão expirou, faça login novamente",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
