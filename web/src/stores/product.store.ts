@@ -12,13 +12,17 @@ export const useProductStore = defineStore('product', {
   state: () => ({
     products: [] as Product[],
     isLoading: ref(false),
+    hasFetched: false,
   }),
   actions: {
     async fetchProducts() {
-      if (!this.products.length) {
+      if (!this.hasFetched) {
         this.isLoading = true;
         await get_products()
-          .then((res) => (this.products = res.data))
+          .then((res) => {
+            this.products = res.data;
+            this.hasFetched = true;
+          })
           .catch(() => {
             throw console.error('Error na renderização dos produtos');
           })
@@ -58,6 +62,6 @@ export const useProductStore = defineStore('product', {
         .catch(() => {
           throw console.error('Erro ao excluir produto');
         });
-    }
+    },
   },
 });

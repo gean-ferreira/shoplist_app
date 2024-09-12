@@ -17,6 +17,16 @@
 
     <!-- Listagem de produtos -->
     <q-list separator v-else>
+      <!-- Verifica se a lista está vazia -->
+      <q-item v-if="productStore.products.length === 0">
+        <q-item-section class="text-center q-pa-md">
+          <q-icon name="category" size="lg" class="q-mx-auto" />
+          <q-item-label> Nenhum produto disponível </q-item-label>
+          <q-item-label caption>Adicione um novo produto abaixo</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <!-- Renderiza os produtos se houver -->
       <q-item
         v-for="product in productStore.products"
         :key="product.product_id"

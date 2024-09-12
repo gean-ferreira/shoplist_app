@@ -1,10 +1,13 @@
 import { api } from 'src/boot/axios';
 import { Notify } from 'quasar';
-import { ProductsPayload, ProductPayload } from 'src/models/product/product';
+import {
+  ProductCreationResponse,
+  ProductListResponse,
+} from 'src/models/product/product';
 
 export const get_products = async () => {
   try {
-    const response = await api.get<ProductsPayload>('/products/');
+    const response = await api.get<ProductListResponse>('/products/');
     Notify.create({
       type: 'positive',
       message: response.data.message,
@@ -19,7 +22,7 @@ export const get_products = async () => {
 
 export const create_product = async (product_name: string) => {
   try {
-    const response = await api.post<ProductPayload>('/products/', {
+    const response = await api.post<ProductCreationResponse>('/products/', {
       product_name: product_name,
     });
     Notify.create({

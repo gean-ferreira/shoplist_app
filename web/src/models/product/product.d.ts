@@ -5,6 +5,6 @@ export interface Product {
   product_name: string;
 }
 
-export interface ProductsPayload extends Payload<Product[]> {}
+export interface ProductCreationResponse extends Payload<Product> {}
 
-export interface ProductPayload extends Payload<Product> {}
+export interface ProductListResponse extends Payload<Product[]> {}
