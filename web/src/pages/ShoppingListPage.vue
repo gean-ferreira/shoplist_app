@@ -7,10 +7,15 @@
       <q-item v-for="i in 5" :key="i">
         <q-item-section>
           <q-skeleton type="text" />
+          <q-skeleton
+            type="text"
+            width="50%"
+            class="q-item__label q-item__label--caption text-caption"
+          />
         </q-item-section>
         <q-item-section side>
-          <q-skeleton flat type="circle" height="25px" width="25px" />
-          <q-skeleton flat type="circle" height="25px" width="25px" />
+          <q-skeleton flat type="circle" height="42px" width="42px" />
+          <q-skeleton flat type="circle" height="42px" width="42px" />
         </q-item-section>
       </q-item>
     </q-list>

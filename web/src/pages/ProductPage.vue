@@ -9,8 +9,8 @@
           <q-skeleton type="text" />
         </q-item-section>
         <q-item-section side>
-          <q-skeleton flat type="circle" height="25px" width="25px" />
-          <q-skeleton flat type="circle" height="25px" width="25px" />
+          <q-skeleton flat type="circle" height="42px" width="42px" />
+          <q-skeleton flat type="circle" height="42px" width="42px" />
         </q-item-section>
       </q-item>
     </q-list>
