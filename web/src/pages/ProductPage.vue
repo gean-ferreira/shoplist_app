@@ -31,10 +31,12 @@
         v-for="product in productStore.products"
         :key="product.product_id"
       >
+        <!-- Nome do produto -->
         <q-item-section>
           <q-item-label>{{ product.product_name }}</q-item-label>
         </q-item-section>
 
+        <!-- Botões de editar e excluir -->
         <q-item-section side>
           <q-btn
             flat

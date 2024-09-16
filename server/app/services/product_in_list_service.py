@@ -84,4 +84,4 @@ class ProductInListService:
         await self.product_in_list_repository.delete_product_in_list(
             list_id, product_in_list_id
         )
-        return "Lista de compras deletada com sucesso"
+        return "Produto da lista deletado com sucesso"

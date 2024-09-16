@@ -20,6 +20,7 @@
       </q-item>
     </q-list>
 
+    <!-- Notificação caso não tenha produtos na lista -->
     <q-list v-else separator>
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="shoppingListStore.shopping_list.length === 0">
@@ -41,6 +42,7 @@
           <q-item-label>{{ list.list_name }}</q-item-label>
         </q-item-section>
 
+        <!-- Botões de editar e excluir -->
         <q-item-section side>
           <q-btn
             flat

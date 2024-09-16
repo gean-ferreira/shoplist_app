@@ -60,7 +60,7 @@ async def get_products_in_lists(list_id: int, user_id: int = Depends(get_current
         for product_in_list in product_in_list_records
     ]
     return ProductInListResponseModel(
-        message="Listas de compras listadas com sucesso", data=product_in_list
+        message="Produtos da Lista de compras listados com sucesso", data=product_in_list
     )
 
 
