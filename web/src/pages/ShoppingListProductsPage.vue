@@ -1,0 +1,262 @@
+<template>
+  <q-page>
+    <h1 class="text-h4 text-center">Produtos na Lista</h1>
+
+    <!-- Skeleton enquanto carrega -->
+    <q-list separator v-if="productInListStore.isLoading">
+      <q-item v-for="i in 5" :key="i">
+        <q-item-section>
+          <q-skeleton type="text" />
+          <q-skeleton type="text" />
+          <q-skeleton type="text" />
+        </q-item-section>
+        <q-item-section side>
+          <q-skeleton flat type="circle" height="42px" width="42px" />
+          <q-skeleton flat type="circle" height="42px" width="42px" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+
+    <!-- Notificação caso não tenha produtos na lista -->
+    <q-list v-else separator>
+      <!-- Verifica se a lista está vazia -->
+      <q-item v-if="productInListStore.productsByList[list_id]?.length === 0">
+        <q-item-section class="text-center q-pa-md">
+          <q-icon name="category" size="lg" class="q-mx-auto" />
+          <q-item-label> Nenhum produto na lista </q-item-label>
+          <q-item-label caption
+            >Adicione um produto usando o botão abaixo</q-item-label
+          >
+        </q-item-section>
+      </q-item>
+
+      <q-item
+        v-for="product in productInListStore.productsByList[list_id]"
+        :key="product.product_in_list_id"
+      >
+        <q-item-section>
+          <q-item-label>{{
+            filterByKey(
+              productStore.products,
+              'product_id',
+              product.product_id
+            )['product_name']
+          }}</q-item-label>
+          <q-item-label caption
+            >Quantidade: {{ product.quantity }}</q-item-label
+          >
+          <q-item-label caption
+            >Preço: R$ {{ formatValues(product.price) }}</q-item-label
+          >
+        </q-item-section>
+
+        <q-item-section side>
+          <q-btn
+            flat
+            round
+            icon="edit"
+            @click="openEditDialog(product)"
+            color="primary"
+          />
+          <q-btn
+            flat
+            round
+            icon="delete"
+            @click="deleteProductFromList(product.product_in_list_id)"
+            color="negative"
+          />
+        </q-item-section>
+      </q-item>
+    </q-list>
+
+    <!-- Botão para adicionar novo produto à lista -->
+    <q-btn
+      round
+      icon="add"
+      color="primary"
+      class="block q-mt-md q-mx-auto"
+      @click="openAddProductDialog"
+    />
+
+    <!-- Diálogo para adicionar/editar produto na lista -->
+    <q-dialog
+      position="bottom"
+      backdrop-filter="blur(4px) saturate(150%)"
+      v-model="isDialogOpen"
+    >
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">
+            {{ isEditMode ? 'Editar Produto' : 'Adicionar Produto' }}
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-form @submit="onSubmit">
+            <q-input
+              v-model.number="productInList.quantity"
+              label="Quantidade"
+              type="number"
+              :rules="[(val) => val > 0 || 'A quantidade deve ser maior que 0']"
+            />
+            <q-input
+              v-model.number="productInList.price"
+              label="Preço"
+              type="number"
+              :rules="[
+                (val) => val !== '' || 'Você deve colocar um preço',
+                (val) => val >= 0 || 'O preço não pode ser negativo',
+              ]"
+              prefix="R$"
+            />
+            {{ productInList.product_id }}
+            <q-select
+              v-model="productInList.product_id"
+              :options="options"
+              option-label="product_name"
+              @filter="filterFn"
+              behavior="menu"
+              use-input
+              label="Produto"
+              transition-show="jump-up"
+              transition-hide="jump-down"
+              :rules="[(val) => !!val || 'Você deve selecionar um produto']"
+            />
+            <q-card-actions align="right">
+              <q-btn flat type="button" label="Cancelar" v-close-popup />
+              <q-btn
+                flat
+                type="submit"
+                label="Salvar"
+                color="primary"
+                :loading="buttonLoading"
+                :disable="buttonLoading"
+              />
+            </q-card-actions>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+  </q-page>
+</template>
+
+<script setup lang="ts">
+import { Product } from 'src/models/product/product';
+import { ProductInListCreate } from 'src/models/product/product_in_list';
+import { useProductStore } from 'src/stores/product.store';
+import { useProductInListStore } from 'src/stores/product_in_list.store';
+import { formatValues } from 'src/utils/functions/formatValues.function';
+import { filterByKey } from 'src/utils/functions/filterByKey.function';
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+// Datas
+const productInListStore = useProductInListStore();
+const productStore = useProductStore();
+const isDialogOpen = ref(false);
+const isEditMode = ref(false);
+const productInList = ref<
+  Omit<ProductInListCreate, 'product_id'> & {
+    product_id: Product | undefined;
+  }
+>({
+  quantity: 1,
+  price: 0.0,
+  product_id: { product_id: 1, product_name: '' },
+  product_in_list_id: 1,
+});
+let buttonLoading = ref(false);
+const options = ref<Product[]>([]);
+const route = useRoute();
+
+// Methods
+// Função para abrir o diálogo de adição
+const openAddProductDialog = () => {
+  isEditMode.value = false;
+  productInList.value = {
+    quantity: 1,
+    price: 0.0,
+    product_id: undefined,
+    product_in_list_id: 1,
+  };
+  isDialogOpen.value = true;
+};
+
+// Função para abrir o diálogo de edição
+const openEditDialog = (product: ProductInListCreate) => {
+  isEditMode.value = true;
+  productInList.value = {
+    ...product,
+    product_id: filterByKey(
+      productStore.products,
+      'product_id',
+      product.product_id
+    ),
+  };
+  isDialogOpen.value = true;
+};
+
+// Função para salvar o produto
+const onSubmit = async () => {
+  buttonLoading.value = true;
+
+  try {
+    if (isEditMode.value) {
+      // Edição do produto
+      await productInListStore
+        .updateProductInList(Number(list_id.value), {
+          ...productInList.value,
+          product_id: productInList.value.product_id?.product_id as number,
+        })
+        .then(() => (isDialogOpen.value = false));
+    } else {
+      // Criação de novo produto
+      await productInListStore
+        .createProductInList(Number(list_id.value), {
+          ...productInList.value,
+          product_id: productInList.value.product_id?.product_id as number,
+        })
+        .then(() => (isDialogOpen.value = false));
+    }
+  } catch {
+    console.error('Error no save Dialog em Produtos');
+  } finally {
+    buttonLoading.value = false;
+  }
+};
+
+// Função para deletar produto da lista
+const deleteProductFromList = async (productInListId: number) => {
+  await productInListStore.deleteProductInList(
+    Number(list_id.value),
+    productInListId
+  );
+};
+
+const filterFn = (val: string, update: (fn: () => void) => void) => {
+  if (val === '') {
+    update(() => {
+      options.value = productStore.products;
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = productStore.products.filter(
+      (p) => p.product_name.toLowerCase().indexOf(needle) > -1
+    );
+  });
+};
+
+// Computed
+const list_id = computed(() => Number(route.params.list_id));
+
+// Mounted
+onMounted(async () => {
+  const list_id = route.params.list_id as string;
+  await productInListStore
+    .fetchProductsInList(Number(list_id))
+    .catch(() => console.error('Error na renderização dos produtos da lista.'));
+});
+</script>

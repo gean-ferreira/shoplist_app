@@ -20,7 +20,14 @@ const routes: RouteRecordRaw[] = [
         name: 'Listas de compras',
         component: () => import('src/pages/ShoppingListPage.vue'),
         meta: {
-          icon: 'shopping_cart',
+          requiresAuth: true,
+        },
+      },
+      {
+        name: 'Produtos da lista',
+        path: 'listas-de-compras/:list_id/produtos',
+        component: () => import('src/pages/ShoppingListProductsPage.vue'),
+        meta: {
           requiresAuth: true,
         },
       },
