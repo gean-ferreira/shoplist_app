@@ -37,9 +37,13 @@
       <q-item
         v-for="list in shoppingListStore.shopping_list"
         :key="list.list_id"
+        clickable
+        v-ripple
       >
-        <q-item-section>
-          <q-item-label>{{ list.list_name }}</q-item-label>
+        <!-- Nome da lista como um link para a página de produtos -->
+        <q-item-section @click="goToListDetails(list.list_id)">
+          <q-item-label>{{ list.list_name }} </q-item-label>
+          <q-item-label caption>Ver detalhes da lista</q-item-label>
         </q-item-section>
 
         <!-- Botões de editar e excluir -->
@@ -115,9 +119,10 @@
 import { ref, onMounted } from 'vue';
 import { useShoppingListStore } from 'src/stores/shopping_list.store';
 import { ShoppingList } from 'src/models/shopping_list/shopping_list';
+import { useRouter } from 'vue-router';
 
 const shoppingListStore = useShoppingListStore();
-
+const router = useRouter();
 // Diálogo de edição/adição
 const editDialog = ref(false);
 const editShoppingListName = ref('');
@@ -173,5 +178,12 @@ const saveShoppingList = async () => {
 // Função para excluir o lista de compra
 const deleteShoppingList = async (list_id: number) => {
   await shoppingListStore.deleteShoppingList(list_id);
+};
+
+const goToListDetails = (list_id: number) => {
+  router.push({
+    name: 'Produtos da lista',
+    params: { list_id: list_id.toString() }, // Convertendo o número para string
+  });
 };
 </script>
