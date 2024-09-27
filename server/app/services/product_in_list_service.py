@@ -50,10 +50,12 @@ class ProductInListService:
         )
         await product_service._verify_product_exists(product_in_list.product_id)
         await verify_user_permission(db_shopping_list.user_id, user_id)
-        await self.product_in_list_repository.create_product_in_list(
-            list_id, product_in_list
+        db_product_in_list = (
+            await self.product_in_list_repository.create_product_in_list(
+                list_id, product_in_list
+            )
         )
-        return "Produto adicionado na lista com sucesso"
+        return db_product_in_list
 
     async def update_product_in_list(
         self,

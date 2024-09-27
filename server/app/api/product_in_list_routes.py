@@ -60,7 +60,8 @@ async def get_products_in_lists(list_id: int, user_id: int = Depends(get_current
         for product_in_list in product_in_list_records
     ]
     return ProductInListResponseModel(
-        message="Produtos da Lista de compras listados com sucesso", data=product_in_list
+        message="Produtos da Lista de compras listados com sucesso",
+        data=product_in_list,
     )
 
 
@@ -69,7 +70,7 @@ async def get_products_in_lists(list_id: int, user_id: int = Depends(get_current
     status_code=status.HTTP_201_CREATED,
     responses={
         201: {
-            "model": BaseResponseModel,
+            "model": ProductInListResponseModel,
             "description": "Produto adicionado na lista com sucesso. Retorna os detalhes do nova produto na lista.",
         },
         401: {
@@ -104,10 +105,18 @@ async def create_product_in_list(
     product_in_list: ProductInListInModel,
     user_id: int = Depends(get_current_user),
 ):
-    message = await product_in_list_service.create_product_in_list(
+    db_product_in_list = await product_in_list_service.create_product_in_list(
         list_id, product_in_list, user_id
     )
-    return BaseResponseModel(message=message)
+    product_in_list_data = ProductInListOutModel(
+        product_in_list_id=db_product_in_list,
+        product_id=product_in_list.product_id,
+        quantity=product_in_list.quantity,
+        price=product_in_list.price,
+    )
+    return ProductInListOutDataModel(
+        message="Produto adicionado na lista com sucesso", data=product_in_list_data
+    )
 
 
 @router.put(
