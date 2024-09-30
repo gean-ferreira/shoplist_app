@@ -18,6 +18,12 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <q-item-label header> Barra de navegação </q-item-label>
+
+        <EssentialLink
+          v-for="link in linksList"
+          :key="link.title"
+          v-bind="link"
+        />
       </q-list>
     </q-drawer>
 
@@ -37,6 +43,15 @@ import { routes } from 'src/router/routes';
 defineOptions({
   name: 'MainLayout',
 });
+
+const linksList = routes
+  .flatMap((route) => route.children || []) // Pega rotas dentro de children
+  .filter((route) => route.meta && route.meta.icon) // Filtra rotas que possuem meta.icon
+  .map((route) => ({
+    title: route.name,
+    icon: route.meta?.icon,
+    link: route.path,
+  })) as EssentialLinkProps[];
 
 const leftDrawerOpen = ref(false);
 
