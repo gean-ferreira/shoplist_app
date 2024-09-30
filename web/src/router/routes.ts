@@ -1,25 +1,33 @@
 import { RouteRecordRaw } from 'vue-router';
 
-const routes: RouteRecordRaw[] = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '',
+        path: '/',
+        name: 'Home',
         component: () => import('pages/IndexPage.vue'),
         meta: {
+          icon: 'home',
           requiresAuth: true,
         },
       },
       {
         path: 'produtos',
+        name: 'Produtos',
         component: () => import('pages/ProductPage.vue'),
+        meta: {
+          icon: 'inventory',
+        },
+      },
       {
         path: 'listas-de-compras',
         name: 'Listas de compras',
         component: () => import('src/pages/ShoppingListPage.vue'),
         meta: {
+          icon: 'shopping_cart',
           requiresAuth: true,
         },
       },
