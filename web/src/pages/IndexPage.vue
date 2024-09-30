@@ -10,5 +10,5 @@ defineOptions({
 });
 
 import { useUserStore } from 'src/stores/user.store';
-const userStore = useUserStore()
+const userStore = useUserStore();
 </script>
