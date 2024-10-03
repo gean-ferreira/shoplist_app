@@ -15,7 +15,7 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'produtos',
+        path: '/produtos',
         name: 'Produtos',
         component: () => import('pages/ProductPage.vue'),
         meta: {
@@ -23,7 +23,7 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'listas-de-compras',
+        path: '/listas-de-compras',
         name: 'Listas de compras',
         component: () => import('src/pages/ShoppingListPage.vue'),
         meta: {
@@ -32,8 +32,8 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: '/listas-de-compras/:list_id/produtos',
         name: 'Produtos da lista',
-        path: 'listas-de-compras/:list_id/produtos',
         component: () => import('src/pages/ShoppingListProductsPage.vue'),
         meta: {
           requiresAuth: true,
