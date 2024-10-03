@@ -49,7 +49,7 @@
             flat
             round
             icon="delete"
-            @click="deleteProduct(product.product_id)"
+            @click="openDeleteDialog(product)"
             color="negative"
           />
         </q-item-section>
@@ -96,6 +96,27 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Diálogo para deletar produto -->
+    <q-dialog v-model="isDeleteDialogOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Tem certeza que deseja excluir este item?</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Excluir"
+            color="negative"
+            :loading="buttonLoading"
+            :disable="buttonLoading"
+            @click="deleteProduct"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -105,8 +126,7 @@ import { useProductStore } from 'src/stores/product.store';
 import { Product } from 'src/models/product/product';
 
 const productStore = useProductStore();
-
-// Diálogo de edição/adição
+const isDeleteDialogOpen = ref(false);
 const editDialog = ref(false);
 const editProductName = ref('');
 let selectedProductId = ref<number | null>(null);
@@ -157,9 +177,24 @@ const saveProduct = async () => {
     buttonLoading.value = false;
   }
 };
+// Função para abrir Dialog de exclusão
+const openDeleteDialog = (product: Product) => {
+  selectedProductId.value = product.product_id;
+  isDeleteDialogOpen.value = true;
+};
 
 // Função para excluir o produto
-const deleteProduct = async (productId: number) => {
-  await productStore.deleteProduct(productId);
+const deleteProduct = async () => {
+  buttonLoading.value = true;
+
+  try {
+    await productStore
+      .deleteProduct(selectedProductId.value as number)
+      .then(() => (isDeleteDialogOpen.value = false));
+  } catch {
+    console.error('Error no Delete Dialog em Produtos');
+  } finally {
+    buttonLoading.value = false;
+  }
 };
 </script>

@@ -62,7 +62,7 @@
             flat
             round
             icon="delete"
-            @click="deleteProductFromList(product.product_in_list_id)"
+            @click="openDeleteDialog(product)"
             color="negative"
           />
         </q-item-section>
@@ -138,6 +138,26 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="isDeleteDialogOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Tem certeza que deseja excluir este item?</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Excluir"
+            color="negative"
+            :loading="buttonLoading"
+            :disable="buttonLoading"
+            @click="deleteProductFromList"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -152,6 +172,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 // Datas
+const isDeleteDialogOpen = ref(false);
 const productInListStore = useProductInListStore();
 const productStore = useProductStore();
 const isDialogOpen = ref(false);
@@ -166,7 +187,8 @@ const productInList = ref<
   product_id: { product_id: 1, product_name: '' },
   product_in_list_id: 1,
 });
-let buttonLoading = ref(false);
+const productInListId = ref<number | null>(null);
+const buttonLoading = ref(false);
 const options = ref<Product[]>([]);
 const route = useRoute();
 
@@ -226,12 +248,28 @@ const onSubmit = async () => {
   }
 };
 
+// Função para abrir Dialog de exclusão
+const openDeleteDialog = (product: ProductInListCreate) => {
+  productInListId.value = product.product_in_list_id;
+  isDeleteDialogOpen.value = true;
+};
+
 // Função para deletar produto da lista
-const deleteProductFromList = async (productInListId: number) => {
-  await productInListStore.deleteProductInList(
-    Number(list_id.value),
-    productInListId
-  );
+const deleteProductFromList = async () => {
+  buttonLoading.value = true;
+
+  try {
+    await productInListStore
+      .deleteProductInList(
+        Number(list_id.value),
+        productInListId.value as number
+      )
+      .then(() => (isDeleteDialogOpen.value = false));
+  } catch {
+    console.error('Error no Delete Dialog em produtos da Lista de Compras');
+  } finally {
+    buttonLoading.value = false;
+  }
 };
 
 const filterFn = (val: string, update: (fn: () => void) => void) => {

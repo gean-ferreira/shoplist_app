@@ -59,7 +59,7 @@
             flat
             round
             icon="delete"
-            @click="deleteShoppingList(list.list_id)"
+            @click="openDeleteDialog(list)"
             color="negative"
           />
         </q-item-section>
@@ -114,6 +114,27 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Diálogo para deletar produto -->
+    <q-dialog v-model="isDeleteDialogOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Tem certeza que deseja excluir este item?</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Excluir"
+            color="negative"
+            :loading="buttonLoading"
+            :disable="buttonLoading"
+            @click="deleteShoppingList"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -123,6 +144,7 @@ import { useShoppingListStore } from 'src/stores/shopping_list.store';
 import { ShoppingList } from 'src/models/shopping_list/shopping_list';
 import { useRouter } from 'vue-router';
 
+const isDeleteDialogOpen = ref(false);
 const shoppingListStore = useShoppingListStore();
 const router = useRouter();
 // Diálogo de edição/adição
@@ -177,9 +199,25 @@ const saveShoppingList = async () => {
   }
 };
 
+// Função para abrir Dialog de exclusão
+const openDeleteDialog = (shoppingList: ShoppingList) => {
+  selectedShoppingListId.value = shoppingList.list_id;
+  isDeleteDialogOpen.value = true;
+};
+
 // Função para excluir o lista de compra
-const deleteShoppingList = async (list_id: number) => {
-  await shoppingListStore.deleteShoppingList(list_id);
+const deleteShoppingList = async () => {
+  buttonLoading.value = true;
+
+  try {
+    await shoppingListStore
+      .deleteShoppingList(selectedShoppingListId.value as number)
+      .then(() => (isDeleteDialogOpen.value = false));
+  } catch {
+    console.error('Error no Delete Dialog em Listas de Compras');
+  } finally {
+    buttonLoading.value = false;
+  }
 };
 
 const goToListDetails = (list_id: number) => {
