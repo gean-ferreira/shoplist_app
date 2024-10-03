@@ -129,9 +129,9 @@ const productStore = useProductStore();
 const isDeleteDialogOpen = ref(false);
 const editDialog = ref(false);
 const editProductName = ref('');
-let selectedProductId = ref<number | null>(null);
-let isEditMode = ref(false);
-let buttonLoading = ref(false);
+const selectedProductId = ref<number | null>(null);
+const isEditMode = ref(false);
+const buttonLoading = ref(false);
 
 // Carregar produtos ao montar o componente
 onMounted(async () => {

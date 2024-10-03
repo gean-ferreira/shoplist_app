@@ -150,9 +150,9 @@ const router = useRouter();
 // Diálogo de edição/adição
 const editDialog = ref(false);
 const editShoppingListName = ref('');
-let selectedShoppingListId = ref<number | null>(null);
-let isEditMode = ref(false);
-let buttonLoading = ref(false);
+const selectedShoppingListId = ref<number | null>(null);
+const isEditMode = ref(false);
+const buttonLoading = ref(false);
 
 // Carregar lista de compras ao montar o componente
 onMounted(async () => {
