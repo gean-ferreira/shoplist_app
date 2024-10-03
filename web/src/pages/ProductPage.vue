@@ -159,10 +159,10 @@ const saveProduct = async () => {
   buttonLoading.value = true;
 
   try {
-    if (isEditMode.value && selectedProductId.value !== null) {
+    if (isEditMode.value) {
       // Edição do produto
       await productStore.updateProduct(
-        selectedProductId.value,
+        selectedProductId.value as number,
         editProductName.value
       );
     } else {
@@ -172,11 +172,13 @@ const saveProduct = async () => {
 
     editDialog.value = false;
   } catch {
-    console.error('Error no save Dialog em Produtos');
+    const action = isEditMode.value ? 'Editar' : 'Adicionar';
+    console.error(`Error no ${action} Dialog em Produtos`);
   } finally {
     buttonLoading.value = false;
   }
 };
+
 // Função para abrir Dialog de exclusão
 const openDeleteDialog = (product: Product) => {
   selectedProductId.value = product.product_id;
