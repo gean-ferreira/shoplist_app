@@ -57,12 +57,7 @@
 
       <!-- Botão para adicionar novo produto -->
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn
-          round
-          icon="add"
-          color="primary"
-          @click="openAddProductDialog"
-        />
+        <q-btn round icon="add" color="primary" @click="openAddProductDialog" />
       </q-page-sticky>
     </q-list>
 
@@ -125,6 +120,7 @@ import { ref, onMounted } from 'vue';
 import { useProductStore } from 'src/stores/product.store';
 import { Product } from 'src/models/product/product';
 
+// Data
 const productStore = useProductStore();
 const isDeleteDialogOpen = ref(false);
 const editDialog = ref(false);
@@ -133,11 +129,13 @@ const selectedProductId = ref<number | null>(null);
 const isEditMode = ref(false);
 const buttonLoading = ref(false);
 
+// Mounted
 // Carregar produtos ao montar o componente
 onMounted(async () => {
   await productStore.fetchProducts();
 });
 
+// Methods
 // Função para abrir o diálogo de edição
 const openEditDialog = (product: Product) => {
   selectedProductId.value = product.product_id;

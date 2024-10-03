@@ -144,21 +144,23 @@ import { useShoppingListStore } from 'src/stores/shopping_list.store';
 import { ShoppingList } from 'src/models/shopping_list/shopping_list';
 import { useRouter } from 'vue-router';
 
+// Data
 const isDeleteDialogOpen = ref(false);
 const shoppingListStore = useShoppingListStore();
 const router = useRouter();
-// Diálogo de edição/adição
 const editDialog = ref(false);
 const editShoppingListName = ref('');
 const selectedShoppingListId = ref<number | null>(null);
 const isEditMode = ref(false);
 const buttonLoading = ref(false);
 
+// Mounted
 // Carregar lista de compras ao montar o componente
 onMounted(async () => {
   await shoppingListStore.fetchShoppingList();
 });
 
+// Methods
 // Função para abrir o diálogo de edição
 const openEditDialog = (shoppingList: ShoppingList) => {
   selectedShoppingListId.value = shoppingList.list_id;
