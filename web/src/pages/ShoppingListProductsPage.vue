@@ -18,7 +18,7 @@
     </q-list>
 
     <!-- Notificação caso não tenha produtos na lista -->
-    <q-list v-else separator>
+    <q-list v-else separator style="margin-bottom: 78px">
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="productInListStore.productsByList[list_id]?.length === 0">
         <q-item-section class="text-center q-pa-md">
@@ -70,13 +70,15 @@
     </q-list>
 
     <!-- Botão para adicionar novo produto à lista -->
-    <q-btn
-      round
-      icon="add"
-      color="primary"
-      class="block q-mt-md q-mx-auto"
-      @click="openAddProductDialog"
-    />
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn
+        round
+        icon="add"
+        color="primary"
+        class="block q-mt-md q-mx-auto"
+        @click="openAddProductDialog"
+      />
+    </q-page-sticky>
 
     <!-- Diálogo para adicionar/editar produto na lista -->
     <q-dialog
@@ -93,6 +95,18 @@
 
         <q-card-section>
           <q-form @submit="onSubmit">
+            <q-select
+              v-model="productInList.product_id"
+              :options="options"
+              option-label="product_name"
+              @filter="filterFn"
+              behavior="menu"
+              use-input
+              label="Produto"
+              transition-show="jump-up"
+              transition-hide="jump-down"
+              :rules="[(val) => !!val || 'Você deve selecionar um produto']"
+            />
             <q-input
               v-model.number="productInList.quantity"
               label="Quantidade"
@@ -108,19 +122,6 @@
                 (val) => val >= 0 || 'O preço não pode ser negativo',
               ]"
               prefix="R$"
-            />
-            {{ productInList.product_id }}
-            <q-select
-              v-model="productInList.product_id"
-              :options="options"
-              option-label="product_name"
-              @filter="filterFn"
-              behavior="menu"
-              use-input
-              label="Produto"
-              transition-show="jump-up"
-              transition-hide="jump-down"
-              :rules="[(val) => !!val || 'Você deve selecionar um produto']"
             />
             <q-card-actions align="right">
               <q-btn flat type="button" label="Cancelar" v-close-popup />

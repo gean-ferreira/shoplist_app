@@ -16,7 +16,7 @@
     </q-list>
 
     <!-- Listagem de produtos -->
-    <q-list separator v-else>
+    <q-list separator v-else style="margin-bottom: 78px">
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="productStore.products.length === 0">
         <q-item-section class="text-center q-pa-md">
@@ -56,13 +56,14 @@
       </q-item>
 
       <!-- Botão para adicionar novo produto -->
-      <q-btn
-        round
-        icon="add"
-        color="primary"
-        class="block q-mt-md q-mx-auto"
-        @click="openAddProductDialog"
-      />
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn
+          round
+          icon="add"
+          color="primary"
+          @click="openAddProductDialog"
+        />
+      </q-page-sticky>
     </q-list>
 
     <!-- Diálogo para editar ou adicionar produto -->

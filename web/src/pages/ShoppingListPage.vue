@@ -21,7 +21,7 @@
     </q-list>
 
     <!-- Notificação caso não tenha produtos na lista -->
-    <q-list v-else separator>
+    <q-list v-else separator style="margin-bottom: 78px">
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="shoppingListStore.shopping_list.length === 0">
         <q-item-section class="text-center q-pa-md">
@@ -66,13 +66,15 @@
       </q-item>
 
       <!-- Botão para adicionar novo lista de compra -->
-      <q-btn
-        round
-        icon="add"
-        color="primary"
-        class="block q-mt-md q-mx-auto"
-        @click="openAddShoppingListDialog"
-      />
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn
+          round
+          icon="add"
+          color="primary"
+          class="block q-mt-md q-mx-auto"
+          @click="openAddShoppingListDialog"
+        />
+      </q-page-sticky>
     </q-list>
 
     <!-- Diálogo para editar ou adicionar lista -->
