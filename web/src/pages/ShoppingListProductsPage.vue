@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-pa-sm">
     <h1 class="text-h4 text-center">Produtos na Lista</h1>
 
     <!-- Skeleton enquanto carrega -->
@@ -70,14 +70,8 @@
     </q-list>
 
     <!-- Botão para adicionar novo produto à lista -->
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn
-        round
-        icon="add"
-        color="primary"
-        class="block q-mt-md q-mx-auto"
-        @click="openAddProductDialog"
-      />
+    <q-page-sticky position="bottom-right" :offset="[22, 22]">
+      <q-btn round icon="add" color="primary" @click="openAddProductDialog" />
     </q-page-sticky>
 
     <!-- Diálogo para adicionar/editar produto na lista -->
@@ -154,7 +148,11 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model="isDeleteDialogOpen" persistent>
+    <q-dialog
+      v-model="isDeleteDialogOpen"
+      backdrop-filter="blur(4px) saturate(150%)"
+      persistent
+    >
       <q-card>
         <q-card-section>
           <div class="text-h6">Tem certeza que deseja excluir este item?</div>
