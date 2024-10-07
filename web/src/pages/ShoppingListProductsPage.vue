@@ -107,6 +107,21 @@
               transition-hide="jump-down"
               :rules="[(val) => !!val || 'Você deve selecionar um produto']"
             />
+            <q-radio
+              class="q-my-md"
+              dense
+              v-model="productInList.quantity_type"
+              val="unit"
+              label="Unidade"
+            />
+            <q-radio
+              class="q-ml-md"
+              dense
+              v-model="productInList.quantity_type"
+              val="kg"
+              label="Quilograma (kg)"
+            />
+
             <q-input
               v-model.number="productInList.quantity"
               label="Quantidade"
@@ -163,7 +178,10 @@
 
 <script setup lang="ts">
 import { Product } from 'src/models/product/product';
-import { ProductInListCreate } from 'src/models/product/product_in_list';
+import {
+  FormProductInList,
+  ProductInListCreate,
+} from 'src/models/product/product_in_list';
 import { useProductStore } from 'src/stores/product.store';
 import { useProductInListStore } from 'src/stores/product_in_list.store';
 import { formatValues } from 'src/utils/functions/formatValues.function';
@@ -177,15 +195,12 @@ const productInListStore = useProductInListStore();
 const productStore = useProductStore();
 const isDialogOpen = ref(false);
 const isEditMode = ref(false);
-const productInList = ref<
-  Omit<ProductInListCreate, 'product_id'> & {
-    product_id: Product | undefined;
-  }
->({
-  quantity: 1,
-  price: 0.0,
-  product_id: { product_id: 1, product_name: '' },
-  product_in_list_id: 1,
+const productInList = ref<FormProductInList>({
+  price: undefined,
+  product_id: undefined,
+  product_in_list_id: undefined,
+  quantity: undefined,
+  quantity_type: 'unit',
 });
 const productInListId = ref<number | null>(null);
 const buttonLoading = ref(false);
@@ -197,10 +212,11 @@ const route = useRoute();
 const openAddProductDialog = () => {
   isEditMode.value = false;
   productInList.value = {
-    quantity: 1,
-    price: 0.0,
+    quantity_type: 'unit',
+    quantity: undefined,
+    price: undefined,
     product_id: undefined,
-    product_in_list_id: 1,
+    product_in_list_id: undefined,
   };
   isDialogOpen.value = true;
 };
@@ -222,23 +238,24 @@ const openEditDialog = (product: ProductInListCreate) => {
 // Função para salvar o produto
 const onSubmit = async () => {
   buttonLoading.value = true;
+  const productInListPayload = {
+    product_in_list_id: productInList.value.product_in_list_id as number,
+    product_id: productInList.value.product_id?.product_id as number,
+    quantity_type: productInList.value.quantity_type,
+    quantity: productInList.value.quantity as number,
+    price: productInList.value.price as number,
+  };
 
   try {
     if (isEditMode.value) {
       // Edição do produto
       await productInListStore
-        .updateProductInList(Number(list_id.value), {
-          ...productInList.value,
-          product_id: productInList.value.product_id?.product_id as number,
-        })
+        .updateProductInList(Number(list_id.value), productInListPayload)
         .then(() => (isDialogOpen.value = false));
     } else {
       // Criação de novo produto
       await productInListStore
-        .createProductInList(Number(list_id.value), {
-          ...productInList.value,
-          product_id: productInList.value.product_id?.product_id as number,
-        })
+        .createProductInList(Number(list_id.value), productInListPayload)
         .then(() => (isDialogOpen.value = false));
     }
   } catch {

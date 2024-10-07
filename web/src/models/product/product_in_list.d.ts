@@ -1,6 +1,10 @@
 import type { Payload } from '../payload/payload';
+import { Product } from 'src/models/product/product';
+
+type QuantityType = 'unit' | 'kg';
 
 export interface ProductInList {
+  quantity_type: QuantityType;
   quantity: number;
   price: number;
   product_id: number;
@@ -8,6 +12,12 @@ export interface ProductInList {
 
 export interface ProductInListCreate extends ProductInList {
   product_in_list_id: number;
+}
+
+export interface FormProductInList
+  extends Partial<Omit<ProductInListCreate, 'product_id' | 'quantity_type'>> {
+  product_id: Product | undefined;
+  quantity_type: QuantityType;
 }
 
 export interface ProductInListCreationResponse
