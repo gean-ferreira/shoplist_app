@@ -111,6 +111,7 @@ async def create_product_in_list(
     product_in_list_data = ProductInListOutModel(
         product_in_list_id=db_product_in_list,
         product_id=product_in_list.product_id,
+        quantity_type=product_in_list.quantity_type,
         quantity=product_in_list.quantity,
         price=product_in_list.price,
     )
