@@ -310,7 +310,7 @@ const list_id = computed(() => Number(route.params.list_id));
 
 // Mounted
 onMounted(async () => {
-  const list_id = route.params.list_id as string;
+  const list_id = route.params.list_id;
   await productInListStore
     .fetchProductsInList(Number(list_id))
     .catch(() => console.error('Error na renderização dos produtos da lista.'));
