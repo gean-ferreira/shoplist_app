@@ -133,7 +133,7 @@
               label="Preço"
               type="number"
               :rules="[
-                (val) => val !== '' || 'Você deve colocar um preço',
+                (val) => !!val || 'Você deve colocar um preço',
                 (val) => val >= 0 || 'O preço não pode ser negativo',
               ]"
               prefix="R$"
