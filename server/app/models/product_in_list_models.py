@@ -2,14 +2,15 @@
 Este módulo define os modelos de dados utilizados para representar os produtos da lista
 """
 
-from typing import List
+from typing import List, Literal
 from pydantic import BaseModel
 
 from app.models.response_models import ResponseWithDataModel
 
 
 class ProductInListBaseModel(BaseModel):
-    quantity: int
+    quantity_type: Literal['unit', 'kg']
+    quantity: float
     price: float
 
 
