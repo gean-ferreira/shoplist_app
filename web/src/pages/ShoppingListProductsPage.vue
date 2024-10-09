@@ -42,11 +42,22 @@
               product.product_id
             )['product_name']
           }}</q-item-label>
-          <q-item-label caption
-            >Quantidade: {{ product.quantity }}</q-item-label
+          <q-item-label v-if="product.quantity_type === 'kg'" caption
+            >Quantidade:
+            {{ product.quantity.toFixed(3).toString().replace('.', ',') }}
+            kg</q-item-label
+          >
+          <q-item-label v-if="product.quantity_type === 'unit'" caption
+            >Quantidade: {{ product.quantity }}
+            {{ product.quantity > 1 ? 'unidades' : 'unidade' }}</q-item-label
           >
           <q-item-label caption
-            >Preço: R$ {{ formatValues(product.price) }}</q-item-label
+            >Preço {{ product.quantity_type === 'kg' ? '(kg)' : 'unidade' }}: R$
+            {{ formatValues(product.price) }}</q-item-label
+          >
+          <q-item-label caption
+            >Total: R$
+            {{ formatValues(product.price * product.quantity) }}</q-item-label
           >
         </q-item-section>
 
