@@ -134,12 +134,20 @@
             />
 
             <q-input
+              v-if="productInList.quantity_type === 'kg'"
               v-model="productInList.quantity"
               label="Quantidade"
               mask="#,### kg"
               fill-mask="0"
               reverse-fill-mask
             />
+            <q-input
+              v-if="productInList.quantity_type === 'unit'"
+              v-model="productInList.quantity"
+              label="Quantidade"
+              mask="##########"
+            />
+
             <q-input
               v-model="productInList.price"
               label="Preço"
