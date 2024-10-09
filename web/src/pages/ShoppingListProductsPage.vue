@@ -140,12 +140,24 @@
               mask="#,### kg"
               fill-mask="0"
               reverse-fill-mask
+              :rules="[
+                (val) => !!val || 'Campo obrigatório',
+                (val) =>
+                  parseFloat(val.replace(',', '.')) > 0 ||
+                  'A quantidade deve ser maior que 0',
+              ]"
             />
             <q-input
               v-if="productInList.quantity_type === 'unit'"
               v-model="productInList.quantity"
               label="Quantidade"
               mask="##########"
+              :rules="[
+                (val) => !!val || 'Campo obrigatório',
+                (val) =>
+                  parseFloat(val.replace(',', '.')) > 0 ||
+                  'A quantidade deve ser maior que 0',
+              ]"
             />
 
             <q-input
@@ -154,8 +166,10 @@
               mask="##,##"
               reverse-fill-mask
               :rules="[
-                (val) => !!val || 'Você deve colocar um preço',
-                (val) => val >= 0 || 'O preço não pode ser negativo',
+                (val) => !!val || 'Campo obrigatório',
+                (val) =>
+                  parseFloat(val.replace(',', '.')) >= 0 ||
+                  'O preço não pode ser negativo',
               ]"
               prefix="R$"
             />
