@@ -134,15 +134,17 @@
             />
 
             <q-input
-              v-model.number="productInList.quantity"
+              v-model="productInList.quantity"
               label="Quantidade"
-              type="number"
-              :rules="[(val) => val > 0 || 'A quantidade deve ser maior que 0']"
+              mask="#,### kg"
+              fill-mask="0"
+              reverse-fill-mask
             />
             <q-input
-              v-model.number="productInList.price"
+              v-model="productInList.price"
               label="Preço"
-              type="number"
+              mask="##,##"
+              reverse-fill-mask
               :rules="[
                 (val) => !!val || 'Você deve colocar um preço',
                 (val) => val >= 0 || 'O preço não pode ser negativo',
