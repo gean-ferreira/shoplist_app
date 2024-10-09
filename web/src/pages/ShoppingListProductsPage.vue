@@ -67,6 +67,12 @@
           />
         </q-item-section>
       </q-item>
+
+      <q-item v-if="productInListStore.productsByList[list_id]?.length">
+        <h2 class="text-h5 text-center q-mx-auto">
+          Total<br />R$ {{ formatValues(productInListStore.totalAmount) }}
+        </h2>
+      </q-item>
     </q-list>
 
     <!-- Botão para adicionar novo produto à lista -->

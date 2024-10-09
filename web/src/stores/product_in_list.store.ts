@@ -3,8 +3,7 @@ import { ref } from 'vue';
 import type {
   ProductInList,
   ProductInListCreate,
-  // ProductInListWithDetails,
-} from 'src/models/product/product_in_list'; // Ajuste o path conforme sua estrutura
+} from 'src/models/product/product_in_list';
 import {
   get_products_in_list,
   create_product_in_list,
@@ -17,6 +16,7 @@ export const useProductInListStore = defineStore('product_in_list', {
   state: () => ({
     productsByList: {} as Record<number, ProductInListCreate[]>, // Armazena os produtos por list_id
     isLoading: ref(false),
+    totalAmount: ref(0),
   }),
   actions: {
     async fetchProductsInList(list_id: number) {
@@ -35,6 +35,8 @@ export const useProductInListStore = defineStore('product_in_list', {
           this.isLoading = false;
         }
       }
+
+      this.calculateTotal(list_id);
     },
     async createProductInList(list_id: number, product: ProductInList) {
       try {
@@ -44,6 +46,7 @@ export const useProductInListStore = defineStore('product_in_list', {
           this.productsByList[list_id] = [];
         }
         this.productsByList[list_id].push(response);
+        this.calculateTotal(list_id);
       } catch (error) {
         console.error(`Erro ao criar produto na lista ${list_id}:`, error);
       }
@@ -62,6 +65,7 @@ export const useProductInListStore = defineStore('product_in_list', {
         if (index !== -1) {
           this.productsByList[list_id][index] = product; // Atualiza o produto na store
         }
+        this.calculateTotal(list_id);
       } catch (error) {
         console.error(`Erro ao atualizar produto na lista ${list_id}:`, error);
       }
@@ -73,9 +77,25 @@ export const useProductInListStore = defineStore('product_in_list', {
         this.productsByList[list_id] = this.productsByList[list_id].filter(
           (product) => product.product_in_list_id !== product_in_list_id
         ); // Remove o produto da store
+        this.calculateTotal(list_id);
       } catch (error) {
         console.error(`Erro ao deletar produto na lista ${list_id}:`, error);
       }
+    },
+    calculateTotal(list_id: number) {
+      if (!this.productsByList[list_id]) {
+        this.totalAmount = 0;
+        return;
+      }
+
+      // Calcula o total
+      this.totalAmount = this.productsByList[list_id].reduce(
+        (total, product) => {
+          const productTotal = product.quantity * product.price;
+          return total + productTotal;
+        },
+        0
+      );
     },
   },
 });
