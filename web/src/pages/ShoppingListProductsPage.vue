@@ -270,6 +270,11 @@ const openEditDialog = (product: ProductInListCreate) => {
       'product_id',
       product.product_id
     ),
+    quantity:
+      product.quantity_type === 'kg'
+        ? product.quantity.toFixed(3).toString()
+        : product.quantity.toString(),
+    price: formatValues(product.price),
   };
   isDialogOpen.value = true;
 };
@@ -281,8 +286,13 @@ const onSubmit = async () => {
     product_in_list_id: productInList.value.product_in_list_id as number,
     product_id: productInList.value.product_id?.product_id as number,
     quantity_type: productInList.value.quantity_type,
-    quantity: productInList.value.quantity as number,
-    price: productInList.value.price as number,
+    quantity: Number(
+      productInList.value.quantity
+        ?.toString()
+        .replace(',', '.')
+        .replace(' kg', '')
+    ),
+    price: Number(productInList.value.price?.toString().replace(',', '.')),
   };
 
   try {

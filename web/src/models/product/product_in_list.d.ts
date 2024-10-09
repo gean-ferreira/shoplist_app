@@ -15,9 +15,16 @@ export interface ProductInListCreate extends ProductInList {
 }
 
 export interface FormProductInList
-  extends Partial<Omit<ProductInListCreate, 'product_id' | 'quantity_type'>> {
+  extends Partial<
+    Omit<
+      ProductInListCreate,
+      'product_id' | 'quantity_type' | 'quantity' | 'price'
+    >
+  > {
   product_id: Product | undefined;
   quantity_type: QuantityType;
+  quantity: string | undefined;
+  price: string | undefined;
 }
 
 export interface ProductInListCreationResponse
