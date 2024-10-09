@@ -124,6 +124,7 @@
               v-model="productInList.quantity_type"
               val="unit"
               label="Unidade"
+              @update:model-value="updatedModelValue"
             />
             <q-radio
               class="q-ml-md"
@@ -131,6 +132,7 @@
               v-model="productInList.quantity_type"
               val="kg"
               label="Quilograma (kg)"
+              @update:model-value="updatedModelValue"
             />
 
             <q-input
@@ -335,6 +337,30 @@ const deleteProductFromList = async () => {
     console.error('Error no Delete Dialog em produtos da Lista de Compras');
   } finally {
     buttonLoading.value = false;
+  }
+};
+
+const formatQuantityByType = (value: number | string): string => {
+  // Garante que o valor é uma string e adiciona zeros à esquerda se necessário
+  const stringValue = value.toString().padStart(4, '0');
+
+  // Divide a string em parte inteira e decimal
+  const integerPart = stringValue.slice(0, -3);
+  const decimalPart = stringValue.slice(-3);
+
+  // Formata com a vírgula e retorna o valor de acordo com o tipo de quantidade
+  const formattedStr = `${integerPart},${decimalPart}`;
+
+  return productInList.value.quantity_type === 'kg'
+    ? formattedStr // Formatação para kg
+    : parseInt(formattedStr.replace(/[,.]/g, ''), 10).toString(); // Formatação para unidade
+};
+
+const updatedModelValue = () => {
+  if (productInList.value.quantity) {
+    productInList.value.quantity = formatQuantityByType(
+      productInList.value.quantity as string
+    );
   }
 };
 
