@@ -199,7 +199,13 @@
     >
       <q-card>
         <q-card-section>
-          <div class="text-h6">Tem certeza que deseja excluir este item?</div>
+          <div class="text-h6">
+            Tem certeza que deseja excluir
+            <span class="text-accent">{{
+              productInList.product_id?.product_name
+            }}</span>
+            da lista de compras?
+          </div>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -321,6 +327,11 @@ const onSubmit = async () => {
 // Função para abrir Dialog de exclusão
 const openDeleteDialog = (product: ProductInListCreate) => {
   productInListId.value = product.product_in_list_id;
+  productInList.value.product_id = filterByKey(
+    productStore.products,
+    'product_id',
+    product.product_id
+  );
   isDeleteDialogOpen.value = true;
 };
 

@@ -84,13 +84,13 @@
     >
       <q-card>
         <q-card-section>
-          <div class="text-h6">
+          <h2 class="text-h6">
             {{
               isEditMode
                 ? 'Editar Lista de Compras'
                 : 'Adicionar Lista de Compras'
             }}
-          </div>
+          </h2>
         </q-card-section>
 
         <q-card-section>
@@ -122,7 +122,11 @@
     >
       <q-card>
         <q-card-section>
-          <div class="text-h6">Tem certeza que deseja excluir este item?</div>
+          <h2 class="text-h6">
+            Tem certeza que deseja excluir
+            <span class="text-accent">{{ editShoppingListName }}</span> das
+            listas de compras?
+          </h2>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -208,6 +212,7 @@ const saveShoppingList = async () => {
 // Função para abrir Dialog de exclusão
 const openDeleteDialog = (shoppingList: ShoppingList) => {
   selectedShoppingListId.value = shoppingList.list_id;
+  editShoppingListName.value = shoppingList.list_name;
   isDeleteDialogOpen.value = true;
 };
 
