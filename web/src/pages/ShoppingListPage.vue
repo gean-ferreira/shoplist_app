@@ -21,7 +21,7 @@
     </q-list>
 
     <!-- Notificação caso não tenha produtos na lista -->
-    <q-list v-else separator style="margin-bottom: 78px">
+    <q-list v-else separator style="margin-bottom: 78px" v-auto-animate>
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="shoppingListStore.shopping_list.length === 0">
         <q-item-section class="text-center q-pa-md">
@@ -64,17 +64,17 @@
           />
         </q-item-section>
       </q-item>
-
-      <!-- Botão para adicionar novo lista de compra -->
-      <q-page-sticky position="bottom-right" :offset="[22, 22]">
-        <q-btn
-          round
-          icon="add"
-          color="primary"
-          @click="openAddShoppingListDialog"
-        />
-      </q-page-sticky>
     </q-list>
+
+    <!-- Botão para adicionar novo lista de compra -->
+    <q-page-sticky position="bottom-right" :offset="[22, 22]">
+      <q-btn
+        round
+        icon="add"
+        color="primary"
+        @click="openAddShoppingListDialog"
+      />
+    </q-page-sticky>
 
     <!-- Diálogo para editar ou adicionar lista -->
     <q-dialog
@@ -146,6 +146,7 @@ import { ref, onMounted } from 'vue';
 import { useShoppingListStore } from 'src/stores/shopping_list.store';
 import { ShoppingList } from 'src/models/shopping_list/shopping_list';
 import { useRouter } from 'vue-router';
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
 
 // Data
 const isDeleteDialogOpen = ref(false);

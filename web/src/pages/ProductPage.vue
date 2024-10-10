@@ -16,7 +16,7 @@
     </q-list>
 
     <!-- Listagem de produtos -->
-    <q-list separator v-else style="margin-bottom: 78px">
+    <q-list separator v-else style="margin-bottom: 78px" v-auto-animate>
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="productStore.products.length === 0">
         <q-item-section class="text-center q-pa-md">
@@ -30,6 +30,7 @@
       <q-item
         v-for="product in productStore.products"
         :key="product.product_id"
+        v-ripple
       >
         <!-- Nome do produto -->
         <q-item-section>
@@ -54,12 +55,12 @@
           />
         </q-item-section>
       </q-item>
-
-      <!-- Botão para adicionar novo produto -->
-      <q-page-sticky position="bottom-right" :offset="[22, 22]">
-        <q-btn round icon="add" color="primary" @click="openAddProductDialog" />
-      </q-page-sticky>
     </q-list>
+
+    <!-- Botão para adicionar novo produto -->
+    <q-page-sticky position="bottom-right" :offset="[22, 22]">
+      <q-btn round icon="add" color="primary" @click="openAddProductDialog" />
+    </q-page-sticky>
 
     <!-- Diálogo para editar ou adicionar produto -->
     <q-dialog
@@ -123,6 +124,7 @@
 import { ref, onMounted } from 'vue';
 import { useProductStore } from 'src/stores/product.store';
 import { Product } from 'src/models/product/product';
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
 
 // Data
 const productStore = useProductStore();

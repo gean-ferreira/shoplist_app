@@ -18,7 +18,7 @@
     </q-list>
 
     <!-- Notificação caso não tenha produtos na lista -->
-    <q-list v-else separator style="margin-bottom: 78px">
+    <q-list v-else separator style="margin-bottom: 78px" v-auto-animate>
       <!-- Verifica se a lista está vazia -->
       <q-item v-if="productInListStore.productsByList[list_id]?.length === 0">
         <q-item-section class="text-center q-pa-md">
@@ -33,6 +33,7 @@
       <q-item
         v-for="product in productInListStore.productsByList[list_id]"
         :key="product.product_in_list_id"
+        v-ripple
       >
         <q-item-section>
           <q-item-label>{{
@@ -229,6 +230,7 @@ import { formatValues } from 'src/utils/functions/formatValues.function';
 import { filterByKey } from 'src/utils/functions/filterByKey.function';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
 
 // Datas
 const isDeleteDialogOpen = ref(false);

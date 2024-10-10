@@ -13,6 +13,7 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "axios": "^1.2.1",
     "pinia": "^2.0.11",
     "@quasar/extras": "^1.16.4",
