@@ -1,17 +1,11 @@
 version: '3'
 services:
   frontend:
-    build:
-      context: ./web
+    image: 1cf9db8/listadecomprasapp_frontend
     ports:
       - "80:80"
-    volumes:
-      - ./web:/app
 
   backend:
-    build:
-      context: ./server
+    image: 1cf9db8/listadecomprasapp_backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./server:/app
