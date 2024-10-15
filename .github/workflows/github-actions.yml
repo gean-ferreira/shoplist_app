@@ -41,7 +41,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 6. Acessar o VPS via SSH e atualizar o Docker Compose
+      # 6. Acessar o VPS via SSH e sincronizar os arquivos com rsync
+      - name: Sync files to VPS
+        uses: appleboy/ssh-action@v0.1.1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_SSH_PASSPHRASE }}
+          script: |
+            rsync -avz --exclude '.git' /github/workspace/ ssh root@191.252.193.86:shoplist_app
+
+      # 7. Deploy do Docker Compose no VPS
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.1
         with:
@@ -50,7 +61,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           passphrase: ${{ secrets.VPS_SSH_PASSPHRASE }}
           script: |
-            cd shoplist_app
+            cd shoplist_app/
             docker-compose down
             docker-compose pull
             docker-compose up -d
