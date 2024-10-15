@@ -9,3 +9,5 @@ services:
     image: 1cf9db8/listadecomprasapp_backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./server/.env

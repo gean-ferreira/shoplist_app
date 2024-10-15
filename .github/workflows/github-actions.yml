@@ -52,7 +52,12 @@ jobs:
             rm -rf shoplist_app/
             ssh -T git@github.com
             git clone https://gean-ferreira:${{ secrets.TOKEN_GITHUB }}@github.com/gean-ferreira/shoplist_app.git
-            cd shoplist_app/
+            cd shoplist_app/server/
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+            echo "COOKIE_SECURE=${{ secrets.COOKIE_SECURE }}" >> .env
+            echo "COOKIE_SAME_SITE=${{ secrets.COOKIE_SAME_SITE }}" >> .env
+            cd ..
             docker-compose down
             docker-compose pull
             docker-compose up -d
