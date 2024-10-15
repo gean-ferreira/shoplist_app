@@ -53,6 +53,7 @@ jobs:
             pwd
             ls
             rm -rf shoplist_app/
+            ssh -T git@github.com
             git clone git@github.com:gean-ferreira/shoplist_app.git
             cd shoplist_app/
             docker-compose down
