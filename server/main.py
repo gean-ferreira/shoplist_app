@@ -14,7 +14,11 @@ for router in routers:
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:9000"],  # Origens permitidas
+    allow_origins=[
+        "http://localhost:9000",
+        "http://listadecomprasapp.com.br",
+        "https://listadecomprasapp.com.br",
+    ],  # Origens permitidas
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
