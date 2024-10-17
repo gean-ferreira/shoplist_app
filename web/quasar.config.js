@@ -54,7 +54,7 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        VITE_API_URL: 'http://191.252.193.86:8000/api',
+        VITE_API_URL: 'https://listadecomprasapp.com.br/api',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
