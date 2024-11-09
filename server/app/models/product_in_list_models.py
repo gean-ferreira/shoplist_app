@@ -9,7 +9,7 @@ from app.models.response_models import ResponseWithDataModel
 
 
 class ProductInListBaseModel(BaseModel):
-    quantity_type: Literal['unit', 'kg']
+    quantity_type: Literal["unit", "kg"]
     quantity: float
     price: float
 
